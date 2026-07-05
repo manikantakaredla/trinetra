@@ -11,6 +11,7 @@ export function Login() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
+    localStorage.setItem("trinetra_auth", "true");
     navigate("/");
   };
 

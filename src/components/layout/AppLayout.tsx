@@ -1,4 +1,4 @@
-import { Outlet, Link, useLocation } from "react-router";
+import { Outlet, Link, useLocation, Navigate, useNavigate } from "react-router";
 import { 
   PlusCircle,
   FileText,
@@ -12,7 +12,8 @@ import {
   BarChart, 
   Cctv, 
   Users, 
-  Settings 
+  Settings,
+  LogOut
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -31,6 +32,17 @@ const sidebarNavItems = [
 
 export function AppLayout() {
   const location = useLocation();
+  const navigate = useNavigate();
+  const isAuthenticated = localStorage.getItem("trinetra_auth") === "true";
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  const handleLogout = () => {
+    localStorage.removeItem("trinetra_auth");
+    navigate("/login");
+  };
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col md:flex-row">
@@ -66,12 +78,21 @@ export function AppLayout() {
         </div>
 
         <div className="p-4 mt-auto border-t border-slate-800">
-          <div className="flex items-center gap-3 p-3 bg-slate-800/50 rounded-lg">
-            <div className="w-8 h-8 rounded-full bg-slate-700"></div>
-            <div className="text-sm">
-              <p className="text-white font-medium">Officer Vikram</p>
-              <p className="text-xs text-slate-500 font-mono">STATION-ID-042</p>
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center gap-3 p-3 bg-slate-800/50 rounded-lg">
+              <div className="w-8 h-8 rounded-full bg-slate-700"></div>
+              <div className="text-sm">
+                <p className="text-white font-medium">Officer Vikram</p>
+                <p className="text-xs text-slate-500 font-mono">STATION-ID-042</p>
+              </div>
             </div>
+            <button 
+              onClick={handleLogout}
+              className="flex items-center justify-center gap-2 w-full p-2 text-sm text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors mt-2"
+            >
+              <LogOut className="w-4 h-4" />
+              Sign Out
+            </button>
           </div>
         </div>
       </aside>
